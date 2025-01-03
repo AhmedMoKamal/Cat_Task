@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int main() {
+    int t;
+    cin >> t;
+
+    while (t--) {
+        int n, q;
+        cin >> n >> q;
+
+        vector<vector<int>> freqA(26, vector<int>(n + 1, 0));
+        vector<vector<int>> freqB(26, vector<int>(n + 1, 0));
+
+        string strA, strB;
+        cin >> strA >> strB;
+
+        for (int i = 0; i < n; i++) {
+            freqA[strA[i] - 'a'][i + 1]++;
+            freqB[strB[i] - 'a'][i + 1]++;
+        }
+
+        for (int c = 0; c < 26; c++) {
+            for (int i = 1; i <= n; i++) {
+                freqA[c][i] += freqA[c][i - 1];
+                freqB[c][i] += freqB[c][i - 1];
+            }
+        }
+
+        while (q--) {
+            int l, r;
+            cin >> l >> r;
+
+            l--; 
+            r--;
+
+            int totalOperations = 0;
+
+            for (int c = 0; c < 26; c++) {
+                int freqInB = freqB[c][r + 1] - freqB[c][l];
+                int freqInA = freqA[c][r + 1] - freqA[c][l];
+
+                if (freqInB > freqInA) {
+                    totalOperations += (freqInB - freqInA);
+                }
+            }
+
+            cout << totalOperations << "\n";
+        }
+    }
+
+    return 0;
+}
+
